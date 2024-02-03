@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function ListOfTodo({ token }) {
+export default function EventsList({ token }) {
   const [eventsList, setEventsList] = useState([]);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function ListOfTodo({ token }) {
         },
       }
     );
-    console.log(res.data, "watauba");
+
     setEventsList(res.data.events);
   };
 
@@ -29,8 +29,7 @@ export default function ListOfTodo({ token }) {
       <h1>Events List</h1>
       <ul>
         {eventsList.map((eventObj) => {
-          console.log(eventObj);
-          return <li key={eventObj.id}>{eventObj.title}</li>;
+          return <li key={eventObj.title}>{eventObj.title}</li>;
         })}
       </ul>
     </div>
