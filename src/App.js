@@ -62,14 +62,19 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App p-12">
       {auth ? (
         <>
           <UserProfile token={token} />
           <EventsList token={token} />
         </>
       ) : (
-        <button onClick={handleLogin}>Login with Google</button>
+        <button
+          className="bg-cyan-500 text-white rounded-lg p-3 shadow-2xl font-medium hover:font-bold hover:bg-cyan-700 active:bg-cyan-600 hover:rounded-xl transition-all duration-800"
+          onClick={handleLogin}
+        >
+          Login with Google
+        </button>
       )}
     </div>
   );

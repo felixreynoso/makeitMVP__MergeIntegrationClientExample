@@ -5,7 +5,6 @@ export default function UserProfile({ token }) {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    console.log(token);
     if (token) {
       fetchUserData(token);
     }
@@ -30,7 +29,23 @@ export default function UserProfile({ token }) {
       <h1>User Profile: </h1>
       <p>Name: {user.name}</p>
       <p>Email: {user.email}</p>
-      <p>Photo URL: {user.picture}</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        Photo URL:
+        <div
+          style={{
+            backgroundImage: `url(${user.picture})`,
+            width: "100px",
+            height: "100px",
+            borderRadius: "100%",
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
