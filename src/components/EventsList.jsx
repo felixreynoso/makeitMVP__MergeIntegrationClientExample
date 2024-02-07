@@ -13,7 +13,7 @@ export default function EventsList({ token }) {
 
   const fetchData = async (token) => {
     const res = await axios.get(
-      "http://127.0.0.1:5001/fx-test-merge/us-central1/api/events",
+      "http://127.0.0.1:5001/communiti-630fc/us-central1/api/events",
       {
         headers: {
           Authorization: "Bearer " + token,

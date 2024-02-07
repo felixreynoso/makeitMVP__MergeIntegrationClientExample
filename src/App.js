@@ -6,7 +6,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   getRedirectResult,
+  onAuthStateChanged,
   getAuth,
+  signOut,
 } from "firebase/auth";
 
 // Components
@@ -26,28 +28,44 @@ const firebaseConfig = {
 
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 function App() {
-  const [auth, setAuth] = useState(
+  const [isLoggedIn, setIsLoggedIn] = useState(
     false || window.localStorage.getItem("auth") === "true"
   );
   const [token, setToken] = useState(window.localStorage.getItem("token"));
 
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      const JWT = user.accessToken;
+
+      setIsLoggedIn(true);
+      setToken(JWT);
+      window.localStorage.setItem("auth", "true");
+      window.localStorage.setItem("token", JWT);
+    } else {
+      setIsLoggedIn(false);
+      window.localStorage.clear();
+    }
+  });
+
   function handleLogin() {
-    signInWithPopup(getAuth(app), provider)
+    signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
 
         // The signed-in user info.
-        const user = result.user;
-        const JWT = user.accessToken;
+        // const user = result.user;
+        // const JWT = user.accessToken;
 
-        // IdP data available using getAdditionalUserInfo(result)
-        setAuth(true);
-        setToken(JWT);
-        window.localStorage.setItem("auth", "true");
-        window.localStorage.setItem("token", JWT);
+        // // IdP data available using getAdditionalUserInfo(result)
+        // setIsLoggedIn(true);
+        // setToken(JWT);
+        // window.localStorage.setItem("auth", "true");
+        // window.localStorage.setItem("token", JWT);
       })
       .catch((error) => {
         // Handle Errors here.
@@ -63,8 +81,14 @@ function App() {
 
   return (
     <div className="App p-12">
-      {auth ? (
+      {isLoggedIn ? (
         <>
+          <button
+            className="bg-red-500 text-white rounded-lg p-3 shadow-2xl font-medium hover:font-bold hover:bg-orange-500 active:bg-orange-600 hover:rounded-xl transition-all duration-800"
+            onClick={() => signOut(auth)}
+          >
+            {"Sign Out "}
+          </button>
           <UserProfile token={token} />
           <EventsList token={token} />
         </>

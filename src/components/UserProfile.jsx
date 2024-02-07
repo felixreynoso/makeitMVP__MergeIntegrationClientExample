@@ -12,7 +12,7 @@ export default function UserProfile({ token }) {
 
   const fetchUserData = async (token) => {
     const res = await axios.get(
-      "http://127.0.0.1:5001/fx-test-merge/us-central1/api/user/profile",
+      "http://127.0.0.1:5001/communiti-630fc/us-central1/api/user/profile",
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -39,6 +39,7 @@ export default function UserProfile({ token }) {
         Photo URL:
         <div
           style={{
+            background: "red",
             backgroundImage: `url(${user.picture})`,
             width: "100px",
             height: "100px",
