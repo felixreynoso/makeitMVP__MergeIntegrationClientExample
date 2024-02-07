@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserContext from "./UserContext";
 import axios from "axios";
 
-export default function EventsList({ token }) {
+export default function EventsList() {
   const [eventsList, setEventsList] = useState([]);
+  const user = useContext(UserContext);
 
   useEffect(() => {
-    console.log(token);
-    if (token) {
-      fetchData(token);
+    if (user) {
+      fetchData(user.accessToken);
     }
-  }, [token]);
+  }, [user]);
 
   const fetchData = async (token) => {
     const res = await axios.get(

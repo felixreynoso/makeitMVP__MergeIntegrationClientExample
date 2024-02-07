@@ -1,53 +1,48 @@
-// import logo from "./logo.svg";
-import "./App.css";
-import { useState, useEffect } from "react";
+// import "./App.css";
+import { useState } from "react";
 import { initializeApp } from "firebase/app";
+
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  getRedirectResult,
   onAuthStateChanged,
   getAuth,
-  signOut,
 } from "firebase/auth";
 
 // Components
+import LoginButton from "./components/LoginButton";
 import EventsList from "./components/EventsList";
 import UserProfile from "./components/UserProfile";
+import UserContext from "./components/UserContext";
+import LogoutButton from "./components/LogoutButton";
+import ToDos from "./components/ToDos";
 
 const provider = new GoogleAuthProvider();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD7oKzPgzjdFpM_qZY0sSiW_K1zocjGYWA",
-  authDomain: "fx-test-merge.firebaseapp.com",
-  projectId: "fx-test-merge",
-  storageBucket: "fx-test-merge.appspot.com",
-  messagingSenderId: "330334661977",
-  appId: "1:330334661977:web:6e28e0992105d2826b7048",
+  apiKey: "AIzaSyCwJJoPdl4DFp6EdmEVoxaeK-jUtf_HIMQ",
+  authDomain: "communiti-630fc.firebaseapp.com",
+  projectId: "communiti-630fc",
+  storageBucket: "communiti-630fc.appspot.com",
+  messagingSenderId: "694468185447",
+  appId: "1:694468185447:web:dc3fcfb023a75993b173c2",
+  measurementId: "G-2HDXX6N821",
 };
-
 // // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    false || window.localStorage.getItem("auth") === "true"
-  );
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(false);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid;
-      const JWT = user.accessToken;
-
       setIsLoggedIn(true);
-      setToken(JWT);
-      window.localStorage.setItem("auth", "true");
-      window.localStorage.setItem("token", JWT);
+      setUser(user);
     } else {
       setIsLoggedIn(false);
-      window.localStorage.clear();
+      setUser(false);
     }
   });
 
@@ -56,49 +51,30 @@ function App() {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-
-        // The signed-in user info.
-        // const user = result.user;
-        // const JWT = user.accessToken;
-
-        // // IdP data available using getAdditionalUserInfo(result)
-        // setIsLoggedIn(true);
-        // setToken(JWT);
-        // window.localStorage.setItem("auth", "true");
-        // window.localStorage.setItem("token", JWT);
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log(error);
       });
   }
 
   return (
-    <div className="App p-12">
+    <div className="p-12 flex flex-col w-fit items-center">
       {isLoggedIn ? (
-        <>
-          <button
-            className="bg-red-500 text-white rounded-lg p-3 shadow-2xl font-medium hover:font-bold hover:bg-orange-500 active:bg-orange-600 hover:rounded-xl transition-all duration-800"
-            onClick={() => signOut(auth)}
-          >
-            {"Sign Out "}
-          </button>
-          <UserProfile token={token} />
-          <EventsList token={token} />
-        </>
+        <UserContext.Provider value={user}>
+          <LogoutButton auth={auth} />
+          <UserProfile />
+
+          {/* EventsList Fetches Data from the backend API setup by MergeIntegration */}
+          <EventsList />
+
+          {/* ToDos component example BYPASSES the API and performs CRUD operations direcly on the firestore */}
+          <ToDos app={app} />
+        </UserContext.Provider>
       ) : (
-        <button
-          className="bg-cyan-500 text-white rounded-lg p-3 shadow-2xl font-medium hover:font-bold hover:bg-cyan-700 active:bg-cyan-600 hover:rounded-xl transition-all duration-800"
-          onClick={handleLogin}
-        >
-          Login with Google
-        </button>
+        <div>
+          {/* <ToDos app={app} /> */}
+          <LoginButton handleLogin={handleLogin} />
+        </div>
       )}
     </div>
   );

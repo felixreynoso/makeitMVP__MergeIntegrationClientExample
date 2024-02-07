@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
+import UserContext from "./UserContext";
 import axios from "axios";
 
-export default function UserProfile({ token }) {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    if (token) {
-      fetchUserData(token);
-    }
-  }, [token]);
+export default function UserProfile() {
+  const user = useContext(UserContext);
 
   const fetchUserData = async (token) => {
-    const res = await axios.get(
+    await axios.get(
       "http://127.0.0.1:5001/communiti-630fc/us-central1/api/user/profile",
       {
         headers: {
@@ -19,9 +14,13 @@ export default function UserProfile({ token }) {
         },
       }
     );
-
-    setUser(res.data.user);
   };
+
+  useEffect(() => {
+    if (user) {
+      fetchUserData(user.accessToken);
+    }
+  }, [user]);
 
   if (Object.keys(user).length === 0) return;
   return (
@@ -40,7 +39,7 @@ export default function UserProfile({ token }) {
         <div
           style={{
             background: "red",
-            backgroundImage: `url(${user.picture})`,
+            backgroundImage: `url(${user.photoURL})`,
             width: "100px",
             height: "100px",
             borderRadius: "100%",
