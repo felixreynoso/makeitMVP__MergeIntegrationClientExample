@@ -41,19 +41,17 @@ export default function ToDos({ app }) {
     const text = inputRef.current.value;
 
     inputRef.current.value = "";
-    if (inputRef.current.value.trim().length === 0)
-      alert("Tasks names can't be empty");
+    if (text.trim().length === 0) alert("Tasks names can't be empty");
 
-    const docRef = await addDoc(collection(db, "todos"), {
+    await addDoc(collection(db, "todos"), {
       text: text,
-      timestamp: new Date(),
     });
   }
 
   return (
-    <div>
+    <div className="w-1/2 flex justify-center flex-col">
       <input
-        className="border-cyan-600 mr-4 border-[1px] rounded mt-4 "
+        className="border-cyan-600 mr-4 border-[1px] rounded my-4 "
         type="text"
         ref={inputRef}
         placeholder="the name of your new to-do card"
@@ -65,7 +63,7 @@ export default function ToDos({ app }) {
         Add Todo
       </button>
 
-      <ul>
+      <ul className="flex flex-col items-center">
         {cards.map((card, index) => {
           return <li key={card.id || index}>{card.text}</li>;
         })}

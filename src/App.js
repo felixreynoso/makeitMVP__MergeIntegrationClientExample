@@ -64,11 +64,13 @@ function App() {
           <LogoutButton auth={auth} />
           <UserProfile />
 
-          {/* EventsList Fetches Data from the backend API setup by MergeIntegration */}
-          {/* <EventsList /> */}
+          <div className="flex w-screen">
+            {/* EventsList Fetches Data from the backend API setup by MergeIntegration */}
+            <EventsList />
 
-          {/* ToDos component example BYPASSES the API and performs CRUD operations direcly on the firestore */}
-          <ToDos app={app} />
+            {/* ToDos component example BYPASSES the API and performs CRUD operations direcly on the firestore */}
+            <ToDos app={app} />
+          </div>
         </UserContext.Provider>
       ) : (
         <div>

@@ -1,33 +1,39 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import UserContext from "./UserContext";
 import axios from "axios";
 
 export default function UserProfile() {
-  const user = useContext(UserContext);
+  const userContext = useContext(UserContext);
+  const [userData, setUserData] = useState({});
 
-  // const fetchUserData = async (token) => {
-  //   await axios.get(
-  //     "http://127.0.0.1:5001/communiti-630fc/us-central1/api/user/profile",
-  //     {
-  //       headers: {
-  //         Authorization: "Bearer " + token,
-  //       },
-  //     }
-  //   );
-  // };
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:5001/communiti-630fc/us-central1/api/user/profile",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      setUserData(response.data.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     fetchUserData(user.accessToken);
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (userContext) {
+      fetchUserData(userContext.accessToken);
+    }
+  }, [userContext]);
 
-  if (Object.keys(user).length === 0) return;
+  if (Object.keys(userData).length === 0) return;
   return (
     <div>
       <h1>User Profile: </h1>
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
+      <p>Name: {userData.name}</p>
+      <p>Email: {userData.email}</p>
       <div
         style={{
           display: "flex",
@@ -39,7 +45,7 @@ export default function UserProfile() {
         <div
           style={{
             background: "red",
-            backgroundImage: `url(${user.photoURL})`,
+            backgroundImage: `url(${userData.picture})`,
             width: "100px",
             height: "100px",
             borderRadius: "100%",
