@@ -65,7 +65,7 @@ function App() {
           <UserProfile />
 
           {/* EventsList Fetches Data from the backend API setup by MergeIntegration */}
-          <EventsList />
+          {/* <EventsList /> */}
 
           {/* ToDos component example BYPASSES the API and performs CRUD operations direcly on the firestore */}
           <ToDos app={app} />

@@ -1,5 +1,6 @@
 import { getFirestore } from "firebase/firestore";
 import { useRef, useState, useEffect } from "react";
+
 import {
   collection,
   getDocs,
@@ -37,24 +38,32 @@ export default function ToDos({ app }) {
   }, [newCard]);
 
   async function handleAddTask() {
+    const text = inputRef.current.value;
+
+    inputRef.current.value = "";
     if (inputRef.current.value.trim().length === 0)
       alert("Tasks names can't be empty");
 
     const docRef = await addDoc(collection(db, "todos"), {
-      text: inputRef.current.value,
+      text: text,
+      timestamp: new Date(),
     });
-
-    inputRef.current.value = "";
   }
 
   return (
     <div>
       <input
+        className="border-cyan-600 mr-4 border-[1px] rounded mt-4 "
         type="text"
         ref={inputRef}
         placeholder="the name of your new to-do card"
       />
-      <button onClick={handleAddTask}>Add Todo</button>
+      <button
+        className="bg-green-500 p-2 rounded-xl text-white font-bold"
+        onClick={handleAddTask}
+      >
+        Add Todo
+      </button>
 
       <ul>
         {cards.map((card, index) => {
