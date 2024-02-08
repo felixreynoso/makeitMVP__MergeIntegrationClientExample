@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserContext from "./UserContext";
 import axios from "axios";
 
-export default function EventsList({ token }) {
+export default function EventsList() {
   const [eventsList, setEventsList] = useState([]);
+  const user = useContext(UserContext);
 
   useEffect(() => {
-    console.log(token);
-    if (token) {
-      fetchData(token);
+    if (user) {
+      fetchData(user.accessToken);
     }
-  }, [token]);
+  }, [user]);
 
   const fetchData = async (token) => {
     const res = await axios.get(
-      "http://127.0.0.1:5001/fx-test-merge/us-central1/api/events",
+      "http://127.0.0.1:5001/communiti-630fc/us-central1/api/events",
       {
         headers: {
           Authorization: "Bearer " + token,
